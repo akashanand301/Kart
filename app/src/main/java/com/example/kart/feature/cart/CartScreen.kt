@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -197,7 +198,8 @@ fun CartItemCard(
                     }
                     Text(
                         text = "${item.quantity}",
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.width(36.dp),
+                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleMedium
                     )
                     IconButton(onClick = onIncrease, modifier = Modifier.size(32.dp)) {

@@ -30,6 +30,8 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = androidx.compose.ui.graphics.Color(0xFFE0E3E2),
     surfaceVariant = androidx.compose.ui.graphics.Color(0xFF3F4947),
     onSurfaceVariant = androidx.compose.ui.graphics.Color(0xFFBFC9C7),
+    background = androidx.compose.ui.graphics.Color(0xFF191C1C),
+    onBackground = androidx.compose.ui.graphics.Color(0xFFE0E3E2),
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -52,6 +54,8 @@ private val LightColorScheme = lightColorScheme(
     onSurface = androidx.compose.ui.graphics.Color(0xFF191C1C),
     surfaceVariant = androidx.compose.ui.graphics.Color(0xFFDBE5E3),
     onSurfaceVariant = androidx.compose.ui.graphics.Color(0xFF3F4947),
+    background = androidx.compose.ui.graphics.Color(0xFFFBFDFD),
+    onBackground = androidx.compose.ui.graphics.Color(0xFF191C1C),
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

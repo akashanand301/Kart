@@ -214,7 +214,8 @@ fun ProductDetailsContent(
                             }
                             Text(
                                 text = "$quantityInCart",
-                                modifier = Modifier.padding(horizontal = 24.dp),
+                                modifier = Modifier.width(36.dp),
+                                textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold
                             )
