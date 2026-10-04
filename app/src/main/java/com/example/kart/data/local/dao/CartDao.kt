@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
-    @Query("SELECT * FROM cart_items")
+    @Query("SELECT * FROM cart_items ORDER BY productId ASC")
     fun observeCart(): Flow<List<CartEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

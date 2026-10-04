@@ -12,14 +12,46 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Turquoise80,
+    onPrimary = androidx.compose.ui.graphics.Color(0xFF003730),
+    primaryContainer = androidx.compose.ui.graphics.Color(0xFF005047),
+    onPrimaryContainer = androidx.compose.ui.graphics.Color(0xFF7CF8E6),
+
     secondary = Teal80,
-    tertiary = Aqua80
+    onSecondary = androidx.compose.ui.graphics.Color(0xFF003730),
+    secondaryContainer = androidx.compose.ui.graphics.Color(0xFF005047),
+    onSecondaryContainer = androidx.compose.ui.graphics.Color(0xFF7CF8E6),
+
+    tertiary = Aqua80,
+    onTertiary = androidx.compose.ui.graphics.Color(0xFF003730),
+    tertiaryContainer = androidx.compose.ui.graphics.Color(0xFF005047),
+    onTertiaryContainer = androidx.compose.ui.graphics.Color(0xFF7CF8E6),
+    
+    surface = androidx.compose.ui.graphics.Color(0xFF191C1C),
+    onSurface = androidx.compose.ui.graphics.Color(0xFFE0E3E2),
+    surfaceVariant = androidx.compose.ui.graphics.Color(0xFF3F4947),
+    onSurfaceVariant = androidx.compose.ui.graphics.Color(0xFFBFC9C7),
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Turquoise40,
+    onPrimary = androidx.compose.ui.graphics.Color.White,
+    primaryContainer = androidx.compose.ui.graphics.Color(0xFFB2DFDB), // Light Turquoise
+    onPrimaryContainer = androidx.compose.ui.graphics.Color(0xFF004D40), // Dark Turquoise
+    
     secondary = Teal40,
+    onSecondary = androidx.compose.ui.graphics.Color.White,
+    secondaryContainer = androidx.compose.ui.graphics.Color(0xFFB2EBF2), // Light Teal
+    onSecondaryContainer = androidx.compose.ui.graphics.Color(0xFF006064), // Dark Teal
+    
     tertiary = Aqua40,
+    onTertiary = androidx.compose.ui.graphics.Color.White,
+    tertiaryContainer = androidx.compose.ui.graphics.Color(0xFF84FFFF),
+    onTertiaryContainer = androidx.compose.ui.graphics.Color(0xFF006064),
+    
+    surface = androidx.compose.ui.graphics.Color(0xFFFBFDFD),
+    onSurface = androidx.compose.ui.graphics.Color(0xFF191C1C),
+    surfaceVariant = androidx.compose.ui.graphics.Color(0xFFDBE5E3),
+    onSurfaceVariant = androidx.compose.ui.graphics.Color(0xFF3F4947),
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

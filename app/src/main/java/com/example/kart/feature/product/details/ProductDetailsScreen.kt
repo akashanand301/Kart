@@ -194,7 +194,11 @@ fun ProductDetailsContent(
         Spacer(modifier = Modifier.height(16.dp))
         
         Box(modifier = Modifier.fillMaxWidth().height(56.dp)) {
-            Crossfade(targetState = quantityInCart > 0, label = "AddToCartToggle") { isAdded ->
+            Crossfade(
+                targetState = quantityInCart > 0, 
+                label = "AddToCartToggle",
+                modifier = Modifier.fillMaxSize()
+            ) { isAdded ->
                 if (isAdded) {
                     Row(
                         modifier = Modifier.fillMaxSize(),
