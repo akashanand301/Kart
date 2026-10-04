@@ -65,7 +65,7 @@ fun AppNavigation() {
                 cartCount = cartUiState.totalCount,
                 onNavigate = { route ->
                     navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
+                        popUpTo("products") {
                             saveState = true
                         }
                         launchSingleTop = true
@@ -110,13 +110,7 @@ fun AppNavigation() {
                 CartScreen(
                     viewModel = cartViewModel,
                     onContinueShopping = {
-                        navController.navigate("products") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.popBackStack("products", inclusive = false)
                     }
                 )
             }
