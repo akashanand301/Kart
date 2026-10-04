@@ -53,7 +53,6 @@ fun ProductDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-            TopAppBar(
                 title = { 
                     val titleText = (uiState as? UiState.Success)?.data?.title ?: ""
                     Text(titleText) 
