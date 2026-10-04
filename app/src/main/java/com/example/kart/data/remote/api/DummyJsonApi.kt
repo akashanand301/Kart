@@ -8,7 +8,10 @@ import retrofit2.http.Query
 
 interface DummyJsonApi {
     @GET("products")
-    suspend fun getProducts(): ProductsResponseDto
+    suspend fun getProducts(
+        @Query("limit") limit: Int = 20,
+        @Query("skip") skip: Int = 0
+    ): ProductsResponseDto
 
     @GET("products/{id}")
     suspend fun getProduct(

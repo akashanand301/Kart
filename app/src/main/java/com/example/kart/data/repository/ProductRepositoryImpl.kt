@@ -14,9 +14,9 @@ class ProductRepositoryImpl(
     private val api: DummyJsonApi
 ) : ProductRepository {
 
-    override suspend fun getProducts(): Result<List<Product>> {
+    override suspend fun getProducts(limit: Int, skip: Int): Result<List<Product>> {
         return try {
-            val response = api.getProducts()
+            val response = api.getProducts(limit, skip)
             Result.Success(response.products.map { it.toDomain() })
         } catch (e: Exception) {
             Result.Error(mapExceptionToMessage(e), e)

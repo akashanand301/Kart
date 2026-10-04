@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import com.example.kart.core.common.UiState
 import com.example.kart.domain.model.Product
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.animation.animateContentSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,6 +112,7 @@ fun ProductDetailsContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
+            .animateContentSize()
     ) {
         Card(
             shape = RoundedCornerShape(16.dp),

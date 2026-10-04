@@ -18,6 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.kart.domain.model.CartItem
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +35,28 @@ fun CartScreen(
     onContinueShopping: () -> Unit
 ) {
     val uiState by viewModel.cartUiState.collectAsStateWithLifecycle()
+    var itemToDelete by androidx.compose.runtime.remember { mutableStateOf<CartItem?>(null) }
+
+    if (itemToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { itemToDelete = null },
+            title = { Text("Delete Product") },
+            text = { Text("Are you sure you want to remove '${itemToDelete?.title}' from the cart?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    itemToDelete?.let { viewModel.removeFromCart(it.productId) }
+                    itemToDelete = null
+                }) {
+                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { itemToDelete = null }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -98,13 +129,19 @@ fun CartScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(uiState.items) { item ->
-                    CartItemCard(
-                        item = item,
-                        onIncrease = { viewModel.increaseQuantity(item.productId) },
-                        onDecrease = { viewModel.decreaseQuantity(item.productId) },
-                        onRemove = { viewModel.removeFromCart(item.productId) }
-                    )
+                items(uiState.items, key = { it.productId }) { item ->
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut() + slideOutVertically()
+                    ) {
+                        CartItemCard(
+                            item = item,
+                            onIncrease = { viewModel.increaseQuantity(item.productId) },
+                            onDecrease = { viewModel.decreaseQuantity(item.productId) },
+                            onRemove = { itemToDelete = item }
+                        )
+                    }
                 }
             }
         }
@@ -120,7 +157,9 @@ fun CartItemCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier

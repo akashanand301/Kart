@@ -3,8 +3,10 @@ package com.example.kart.feature.product.list
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.item
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -27,6 +29,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.example.kart.R
+import androidx.compose.animation.animateContentSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,12 +47,20 @@ fun ProductListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { 
-                    Text(
-                        "Kart", 
-                        style = MaterialTheme.typography.headlineMedium, 
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary
-                    ) 
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
+                            contentDescription = "App Logo",
+                            modifier = Modifier.size(32.dp).clip(RoundedCornerShape(8.dp))
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            "Kart", 
+                            style = MaterialTheme.typography.headlineMedium, 
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
+                        ) 
+                    }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
@@ -96,6 +110,16 @@ fun ProductListScreen(
                         items(state.data) { product ->
                             ProductCard(product = product, onClick = { onProductClick(product.id) })
                         }
+                        if (searchQuery.isBlank()) {
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                TextButton(
+                                    onClick = { viewModel.loadProducts() },
+                                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                                ) {
+                                    Text("Show More...")
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -133,7 +157,7 @@ fun ProductCard(product: Product, onClick: () -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
-        Column {
+        Column(modifier = Modifier.animateContentSize()) {
             Box(modifier = Modifier.fillMaxWidth().height(140.dp)) {
                 AsyncImage(
                     model = product.thumbnail,
