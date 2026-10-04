@@ -63,7 +63,7 @@ fun CartScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Shopping Cart") },
+                title = { Text("MyCart") },
                 navigationIcon = {
                     IconButton(onClick = onContinueShopping) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
