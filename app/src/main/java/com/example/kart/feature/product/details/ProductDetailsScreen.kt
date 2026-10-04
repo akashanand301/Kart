@@ -47,7 +47,10 @@ fun ProductDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Details") },
+                title = { 
+                    val titleText = (uiState as? UiState.Success)?.data?.title ?: "Details"
+                    Text(titleText) 
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
