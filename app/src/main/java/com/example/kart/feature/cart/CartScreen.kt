@@ -58,7 +58,7 @@ fun CartScreen(
                         ) {
                             Text("Total Price:", style = MaterialTheme.typography.titleLarge)
                             Text(
-                                String.format("$%.2f", uiState.totalPrice),
+                                String.format("₹%.2f", uiState.totalPrice),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold
@@ -148,7 +148,7 @@ fun CartItemCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "$${item.price}",
+                    text = "₹${item.price}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold

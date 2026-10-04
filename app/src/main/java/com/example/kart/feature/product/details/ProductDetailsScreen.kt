@@ -16,10 +16,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.kart.core.common.UiState
 import com.example.kart.domain.model.Product
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,9 +70,14 @@ fun ProductDetailsScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is UiState.Success -> {
+                    val cartItem by viewModel.observeCartItem(productId).collectAsStateWithLifecycle(null)
                     ProductDetailsContent(
                         product = state.data,
-                        onAddToCart = { viewModel.addToCart(state.data) }
+                        quantityInCart = cartItem?.quantity ?: 0,
+                        onAddToCart = { viewModel.addToCart(state.data) },
+                        onIncrease = { viewModel.increaseQuantity(state.data.id) },
+                        onDecrease = { viewModel.decreaseQuantity(state.data.id) },
+                        onGoToCart = onNavigateToCart
                     )
                 }
                 is UiState.Error -> {
@@ -90,7 +100,11 @@ fun ProductDetailsScreen(
 @Composable
 fun ProductDetailsContent(
     product: Product,
-    onAddToCart: () -> Unit
+    quantityInCart: Int,
+    onAddToCart: () -> Unit,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit,
+    onGoToCart: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -98,16 +112,23 @@ fun ProductDetailsContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        AsyncImage(
-            model = product.thumbnail,
-            contentDescription = product.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp),
-            contentScale = ContentScale.Fit
-        )
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            AsyncImage(
+                model = product.thumbnail,
+                contentDescription = product.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(16.dp),
+                contentScale = ContentScale.Fit
+            )
+        }
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         
         Text(
             text = product.title,
@@ -118,10 +139,10 @@ fun ProductDetailsContent(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "$${product.price}",
-            style = MaterialTheme.typography.headlineSmall,
+            text = "₹${product.price}",
+            style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.ExtraBold
         )
         
         Spacer(modifier = Modifier.height(16.dp))
@@ -130,42 +151,99 @@ fun ProductDetailsContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Rating: ${product.rating}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Stock: ${product.stock}", style = MaterialTheme.typography.bodyLarge)
+            InfoChip(label = "Rating", value = "${product.rating} ⭐")
+            InfoChip(label = "Stock", value = "${product.stock} left")
         }
         
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Brand: ${product.brand}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Category: ${product.category}", style = MaterialTheme.typography.bodyLarge)
+            InfoChip(label = "Brand", value = product.brand)
+            InfoChip(label = "Category", value = product.category.capitalize())
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         
         Text(
             text = "Description",
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.secondary
         )
         
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
             text = product.description,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        Button(
-            onClick = onAddToCart,
-            modifier = Modifier.fillMaxWidth().height(56.dp)
+        if (quantityInCart > 0) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    FilledIconButton(onClick = onDecrease, modifier = Modifier.size(48.dp)) {
+                        Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+                    }
+                    Text(
+                        text = "$quantityInCart",
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                    FilledIconButton(onClick = onIncrease, modifier = Modifier.size(48.dp)) {
+                        Icon(Icons.Filled.Add, contentDescription = "Increase")
+                    }
+                }
+                
+                Button(
+                    onClick = onGoToCart,
+                    modifier = Modifier.height(48.dp)
+                ) {
+                    Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("GO TO CART")
+                }
+            }
+        } else {
+            Button(
+                onClick = onAddToCart,
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
+            }
+        }
+    }
+}
+
+@Composable
+fun InfoChip(label: String, value: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
+            Text(text = label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(text = value, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
         }
     }
 }

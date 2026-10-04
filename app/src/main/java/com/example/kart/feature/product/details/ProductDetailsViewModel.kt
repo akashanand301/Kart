@@ -11,6 +11,9 @@ import com.example.kart.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ProductDetailsViewModel(
@@ -34,6 +37,16 @@ class ProductDetailsViewModel(
         }
     }
 
+    fun observeCartItem(productId: Int): StateFlow<CartItem?> {
+        return cartRepository.observeCart()
+            .map { cart -> cart.find { it.productId == productId } }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null
+            )
+    }
+
     fun addToCart(product: Product) {
         viewModelScope.launch {
             val item = CartItem(
@@ -50,5 +63,17 @@ class ProductDetailsViewModel(
 
     fun resetAddedToCart() {
         _addedToCart.value = false
+    }
+
+    fun increaseQuantity(productId: Int) {
+        viewModelScope.launch {
+            cartRepository.increaseQuantity(productId)
+        }
+    }
+
+    fun decreaseQuantity(productId: Int) {
+        viewModelScope.launch {
+            cartRepository.decreaseQuantity(productId)
+        }
     }
 }
