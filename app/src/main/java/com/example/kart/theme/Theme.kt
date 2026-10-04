@@ -10,13 +10,16 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(primary = Purple80, secondary = PurpleGrey80, tertiary = Pink80)
+private val DarkColorScheme = darkColorScheme(
+    primary = Turquoise80,
+    secondary = Teal80,
+    tertiary = Aqua80
+)
 
-private val LightColorScheme =
-  lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+private val LightColorScheme = lightColorScheme(
+    primary = Turquoise40,
+    secondary = Teal40,
+    tertiary = Aqua40,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -32,8 +35,8 @@ private val LightColorScheme =
 @Composable
 fun KartTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  // Dynamic color is available on Android 12+
-  dynamicColor: Boolean = true,
+  // Dynamic color disabled so turquoise is always visible
+  dynamicColor: Boolean = false,
   content: @Composable () -> Unit,
 ) {
   val colorScheme =
