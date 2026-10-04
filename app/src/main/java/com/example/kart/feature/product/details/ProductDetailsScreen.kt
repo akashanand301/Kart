@@ -72,7 +72,8 @@ fun ProductDetailsScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is UiState.Success -> {
-                    val cartItem by viewModel.observeCartItem(productId).collectAsStateWithLifecycle(null)
+                    val cartItems by viewModel.cartItems.collectAsStateWithLifecycle()
+                    val cartItem = cartItems.find { it.productId == productId }
                     ProductDetailsContent(
                         product = state.data,
                         quantityInCart = cartItem?.quantity ?: 0,

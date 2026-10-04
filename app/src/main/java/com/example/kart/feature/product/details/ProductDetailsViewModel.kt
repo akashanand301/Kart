@@ -37,15 +37,12 @@ class ProductDetailsViewModel(
         }
     }
 
-    fun observeCartItem(productId: Int): StateFlow<CartItem?> {
-        return cartRepository.observeCart()
-            .map { cart -> cart.find { it.productId == productId } }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = null
-            )
-    }
+    val cartItems: StateFlow<List<CartItem>> = cartRepository.observeCart()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     fun addToCart(product: Product) {
         viewModelScope.launch {
