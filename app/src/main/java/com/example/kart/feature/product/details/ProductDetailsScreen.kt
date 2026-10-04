@@ -26,6 +26,7 @@ import com.example.kart.core.common.UiState
 import com.example.kart.domain.model.Product
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.Crossfade
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +112,6 @@ fun ProductDetailsContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .animateContentSize()
     ) {
         Column(
             modifier = Modifier
@@ -194,48 +194,50 @@ fun ProductDetailsContent(
         Spacer(modifier = Modifier.height(16.dp))
         
         Box(modifier = Modifier.fillMaxWidth().height(56.dp)) {
-            if (quantityInCart > 0) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Crossfade(targetState = quantityInCart > 0, label = "AddToCartToggle") { isAdded ->
+                if (isAdded) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        FilledIconButton(onClick = onDecrease, modifier = Modifier.size(48.dp)) {
-                            Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            FilledIconButton(onClick = onDecrease, modifier = Modifier.size(48.dp)) {
+                                Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+                            }
+                            Text(
+                                text = "$quantityInCart",
+                                modifier = Modifier.padding(horizontal = 24.dp),
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                            FilledIconButton(onClick = onIncrease, modifier = Modifier.size(48.dp)) {
+                                Icon(Icons.Filled.Add, contentDescription = "Increase")
+                            }
                         }
-                        Text(
-                            text = "$quantityInCart",
-                            modifier = Modifier.padding(horizontal = 24.dp),
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                        FilledIconButton(onClick = onIncrease, modifier = Modifier.size(48.dp)) {
-                            Icon(Icons.Filled.Add, contentDescription = "Increase")
+                        
+                        Button(
+                            onClick = onGoToCart,
+                            modifier = Modifier.height(56.dp)
+                        ) {
+                            Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("CART")
                         }
                     }
-                    
+                } else {
                     Button(
-                        onClick = onGoToCart,
-                        modifier = Modifier.height(56.dp)
+                        onClick = onAddToCart,
+                        modifier = Modifier.fillMaxSize(),
+                        shape = RoundedCornerShape(12.dp)
                     ) {
                         Icon(Icons.Filled.ShoppingCart, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("CART")
+                        Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
                     }
-                }
-            } else {
-                Button(
-                    onClick = onAddToCart,
-                    modifier = Modifier.fillMaxSize(),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Icon(Icons.Filled.ShoppingCart, contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
                 }
             }
         }
