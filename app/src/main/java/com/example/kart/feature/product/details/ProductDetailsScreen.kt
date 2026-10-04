@@ -110,10 +110,14 @@ fun ProductDetailsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .padding(16.dp)
             .animateContentSize()
     ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
         Card(
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -185,6 +189,9 @@ fun ProductDetailsContent(
         )
         
         Spacer(modifier = Modifier.height(32.dp))
+        } // End of scrollable Column
+        
+        Spacer(modifier = Modifier.height(16.dp))
         
         Box(modifier = Modifier.fillMaxWidth().height(56.dp)) {
             if (quantityInCart > 0) {
