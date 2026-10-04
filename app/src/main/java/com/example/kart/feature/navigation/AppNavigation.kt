@@ -89,7 +89,7 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = "products",
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
         ) {
             composable("products") {
                 val viewModel: ProductListViewModel = viewModel(factory = AppViewModelProvider.Factory)

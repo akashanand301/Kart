@@ -53,8 +53,9 @@ fun ProductDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+            TopAppBar(
                 title = { 
-                    val titleText = (uiState as? UiState.Success)?.data?.title ?: "Details"
+                    val titleText = (uiState as? UiState.Success)?.data?.title ?: ""
                     Text(titleText) 
                 },
                 navigationIcon = {
@@ -151,20 +152,20 @@ fun ProductDetailsContent(
         
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            InfoChip(label = "Rating", value = "${product.rating} ⭐")
-            InfoChip(label = "Stock", value = "${product.stock} left")
+            InfoCard(modifier = Modifier.weight(1f), label = "Rating", value = "${product.rating} ⭐")
+            InfoCard(modifier = Modifier.weight(1f), label = "Stock", value = "${product.stock}")
         }
         
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            InfoChip(label = "Brand", value = product.brand)
-            InfoChip(label = "Category", value = product.category.capitalize())
+            InfoCard(modifier = Modifier.weight(1f), label = "Brand", value = product.brand)
+            InfoCard(modifier = Modifier.weight(1f), label = "Category", value = product.category.capitalize())
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -186,66 +187,76 @@ fun ProductDetailsContent(
         
         Spacer(modifier = Modifier.height(32.dp))
         
-        if (quantityInCart > 0) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        Box(modifier = Modifier.fillMaxWidth().height(56.dp)) {
+            if (quantityInCart > 0) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    FilledIconButton(onClick = onDecrease, modifier = Modifier.size(48.dp)) {
-                        Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        FilledIconButton(onClick = onDecrease, modifier = Modifier.size(48.dp)) {
+                            Icon(Icons.Filled.Remove, contentDescription = "Decrease")
+                        }
+                        Text(
+                            text = "$quantityInCart",
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        FilledIconButton(onClick = onIncrease, modifier = Modifier.size(48.dp)) {
+                            Icon(Icons.Filled.Add, contentDescription = "Increase")
+                        }
                     }
-                    Text(
-                        text = "$quantityInCart",
-                        modifier = Modifier.padding(horizontal = 24.dp),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    FilledIconButton(onClick = onIncrease, modifier = Modifier.size(48.dp)) {
-                        Icon(Icons.Filled.Add, contentDescription = "Increase")
+                    
+                    Button(
+                        onClick = onGoToCart,
+                        modifier = Modifier.height(56.dp)
+                    ) {
+                        Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("CART")
                     }
                 }
-                
+            } else {
                 Button(
-                    onClick = onGoToCart,
-                    modifier = Modifier.height(48.dp)
+                    onClick = onAddToCart,
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Icon(Icons.Filled.ShoppingCart, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("GO TO CART")
+                    Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
                 }
-            }
-        } else {
-            Button(
-                onClick = onAddToCart,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(Icons.Filled.ShoppingCart, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("ADD TO CART", style = MaterialTheme.typography.titleMedium)
             }
         }
     }
 }
 
 @Composable
-fun InfoChip(label: String, value: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.padding(4.dp)
+fun InfoCard(modifier: Modifier = Modifier, label: String, value: String) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(text = value, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = value, 
+                style = MaterialTheme.typography.titleMedium, 
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1
+            )
         }
     }
 }
