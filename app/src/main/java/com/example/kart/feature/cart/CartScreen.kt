@@ -130,18 +130,13 @@ fun CartScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(uiState.items, key = { it.productId }) { item ->
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn() + slideInVertically(),
-                        exit = fadeOut() + slideOutVertically()
-                    ) {
-                        CartItemCard(
-                            item = item,
-                            onIncrease = { viewModel.increaseQuantity(item.productId) },
-                            onDecrease = { viewModel.decreaseQuantity(item.productId) },
-                            onRemove = { itemToDelete = item }
-                        )
-                    }
+                    CartItemCard(
+                        modifier = Modifier.animateItem(),
+                        item = item,
+                        onIncrease = { viewModel.increaseQuantity(item.productId) },
+                        onDecrease = { viewModel.decreaseQuantity(item.productId) },
+                        onRemove = { itemToDelete = item }
+                    )
                 }
             }
         }
@@ -150,13 +145,14 @@ fun CartScreen(
 
 @Composable
 fun CartItemCard(
+    modifier: Modifier = Modifier,
     item: CartItem,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
     onRemove: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
